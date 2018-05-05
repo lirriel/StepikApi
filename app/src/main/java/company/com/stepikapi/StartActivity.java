@@ -25,7 +25,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class StartActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ItemFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ItemFragment.OnListFragmentInteractionListener,
+        FaveFragment.OnListFragmentInteractionListener {
     private MaterialSearchView searchView;
     private AppDelegate appDelegate;
     private List<Course> courses;
@@ -45,10 +47,7 @@ public class StartActivity extends AppCompatActivity
                 fragment = new ItemFragment();
                 break;
             case R.id.nav_slideshow:
-//                fragment = new Menu2();
-                break;
-            case R.id.nav_manage:
-//                fragment = new Menu3();
+                fragment = new FaveFragment();
                 break;
         }
 

@@ -109,12 +109,16 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                 courseName.setText(courseInfo.getCourseTitle());
 
                 favourite.setOnClickListener(v -> {
-                    if (courseInfo.isFave())
+                    if (courseInfo.isFave()) {
                         courseInfo.setFave(false);
-                    else
+                        appDatabase.getCourseDao().delete(courseInfo);
+                    }
+                    else {
                         courseInfo.setFave(true);
+                        appDatabase.getCourseDao().insert(courseInfo);
+                    }
                     setFave(courseInfo.isFave());
-                    appDatabase.getCourseDao().updateCurrencyFave(courseInfo.getId(), courseInfo.isFave());
+                    //appDatabase.getCourseDao().updateCurrencyFave(courseInfo.getId(), courseInfo.isFave());
                     Log.v("fave", "added");
                 });
 
@@ -126,7 +130,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                         .fallback(android.R.color.holo_orange_light)
                         .error(R.mipmap.ic_launcher_round);
 
-                byte[] image = appDatabase.getCourseDao().getCourseByID(courseInfo.getId()).getCover();
+                byte[] image = appDatabase.getCourseDao().getCover(courseInfo.getId());
                 if (image != null) {
                     courseLogo.setImageDrawable(BitmapTranslator.bitmapToDrawable(BitmapTranslator.getImage(image), context));
                     Log.v("bind", "load from db");
