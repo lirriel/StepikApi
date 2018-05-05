@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#66cd66</color>
+    <color name="colorPrimaryDark">#2e9a2e</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="bckg">#ffff</color>
+    <color name="bckgGreen">#2e9a2e</color>
+    <color name="bckgGreenLight">#66cd66</color>
+</resources>
