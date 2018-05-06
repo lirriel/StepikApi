@@ -3,6 +3,7 @@ package company.com.stepikapi;
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +21,7 @@ import android.widget.ProgressBar;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.annotations.NonNull;
@@ -37,6 +39,7 @@ public class StartActivity extends AppCompatActivity
     private List<Course> courses;
     private Fragment fragment = null;
     private ProgressBar progressBar;
+    private static final String COURSES_TAG = "courses";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -183,7 +186,19 @@ public class StartActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentInteraction(Uri uri) { }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(COURSES_TAG, (Serializable) courses);
+        Log.d(COURSES_TAG, "onSaveInstanceState");
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        courses = (List<Course>) savedInstanceState.getSerializable(COURSES_TAG);
+        Log.d(COURSES_TAG, "onRestoreInstanceState");
     }
 }

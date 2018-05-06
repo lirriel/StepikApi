@@ -140,7 +140,10 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                     courseLogo.setImageDrawable(BitmapTranslator.bitmapToDrawable(BitmapTranslator.getImage(image), context));
                     Log.v("bind", "load from db");
                 } else {
-                    Glide.with(itemView)
+                    if (courseInfo.getCover() != null)
+                        courseLogo.setImageDrawable(BitmapTranslator.bitmapToDrawable(BitmapTranslator.getImage(courseInfo.getCover()), context));
+                    else
+                        Glide.with(itemView)
                             .load(courseInfo.getUrlCover())
                             .apply(options)
                             .listener(new RequestListener<Drawable>() {

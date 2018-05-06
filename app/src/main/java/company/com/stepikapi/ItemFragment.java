@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +28,7 @@ import java.util.List;
 public class ItemFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "1";
+    private static final String COURSES_TAG = "courses";
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     private CourseAdapter courseAdapter;
@@ -50,14 +53,17 @@ public class ItemFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Log.v("item", "started");
-        if (getArguments() != null) {
+        if (savedInstanceState != null) {
+            courses = (ArrayList<Course>) savedInstanceState.getSerializable(COURSES_TAG);
+        }
+        else if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             Bundle bundle = getArguments();
             if (bundle != null) {
                 courses = (ArrayList<Course>) bundle.getSerializable("list");
             }
         }
-        appDelegate = AppDelegate.from(getContext());
+        appDelegate = AppDelegate.from(getContext().getApplicationContext());
     }
 
     @Override
@@ -65,7 +71,9 @@ public class ItemFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
-        // Set the adapter
+        if (savedInstanceState != null)
+            courses = (ArrayList<Course>) savedInstanceState.getSerializable(COURSES_TAG);
+
         if (view instanceof RecyclerView) {
             courseAdapter = new CourseAdapter(course -> DetailsActivity.start(getActivity(), course), AppDatabase.getAppDatabase(getContext().getApplicationContext()));
 
@@ -114,5 +122,12 @@ public class ItemFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(int item);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(COURSES_TAG, (Serializable) courses);
+        Log.d(COURSES_TAG, "onSaveInstanceState");
     }
 }
