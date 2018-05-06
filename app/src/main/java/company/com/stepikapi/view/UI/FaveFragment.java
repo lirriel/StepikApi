@@ -60,15 +60,19 @@ public class FaveFragment extends Fragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
-            courseAdapter = new CourseAdapter(course -> DetailsActivity.start(getActivity(), course), AppDatabase.getAppDatabase(getContext().getApplicationContext()));
+            // init course adapter
+            courseAdapter = new CourseAdapter(course -> DetailsActivity.start(getActivity(), course),
+                    AppDatabase.getAppDatabase(getContext().getApplicationContext()));
 
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
+
+            if (mColumnCount <= 1)
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
+            else
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+
+            // set adapter data
             recyclerView.setAdapter(courseAdapter);
             if (courses != null && courses.size() > 0)
                 courseAdapter.setData(courses);

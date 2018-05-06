@@ -10,21 +10,33 @@ import android.graphics.drawable.Drawable;
 import java.io.ByteArrayOutputStream;
 
 public class BitmapTranslator {
+    /**
+     * Translate Bitmap to byte array to save to Room database
+     */
     public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
         return outputStream.toByteArray();
     }
 
+    /**
+     * Translate byte[] array from database to Bitmap
+     */
     public static Bitmap getImage(byte[] imgByte){
         return BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
     }
 
+    /**
+     * Change bitmap to drawable
+     */
     public static Drawable bitmapToDrawable(Bitmap bitmap, Context context) {
         Drawable mDrawable = new BitmapDrawable(context.getResources(), bitmap);
         return mDrawable;
     }
 
+    /**
+     * Change drawable to bitmap
+     */
     public static Bitmap drawableToBitmap(Drawable drawable) {
         Bitmap bitmap;
 

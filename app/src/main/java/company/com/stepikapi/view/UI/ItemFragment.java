@@ -35,9 +35,11 @@ public class ItemFragment extends Fragment {
     public static ItemFragment newInstance(int columnCount, List<Course> courses) {
         ItemFragment fragment = new ItemFragment();
         Bundle args = new Bundle();
+        // send list of courses to fragment
         args.putSerializable(LIST, (Serializable) courses);
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -48,9 +50,11 @@ public class ItemFragment extends Fragment {
         setRetainInstance(true);
         Log.v("item", "started");
 
+        // check extra
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             Bundle bundle = getArguments();
+            // get list of courses
             if (bundle != null) {
                 courses = bundle.getParcelableArrayList(LIST);
             }
@@ -63,18 +67,23 @@ public class ItemFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
         if (view instanceof RecyclerView) {
-            courseAdapter = new CourseAdapter(course -> DetailsActivity.start(getActivity(), course), AppDatabase.getAppDatabase(getContext().getApplicationContext()));
+            courseAdapter = new CourseAdapter(course -> DetailsActivity.start(getActivity(), course),
+                    AppDatabase.getAppDatabase(getContext().getApplicationContext()));
 
             Context context = view.getContext();
+
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
+            if (mColumnCount <= 1)
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
+            else
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+
+            // item decorator for recyclerView
             DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                     DividerItemDecoration.VERTICAL);
             recyclerView.addItemDecoration(dividerItemDecoration);
+
+            // set adapter & data
             recyclerView.setAdapter(courseAdapter);
             if (courses != null && courses.size() > 0)
                 courseAdapter.setData(courses);

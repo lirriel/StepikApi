@@ -68,6 +68,10 @@ public class StartActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
     }
 
+    /**
+     * Load search request from net using api
+     * @param searchTxt
+     */
     @SuppressLint("CheckResult")
     private void loadSearch(String searchTxt) {
         appDelegate
@@ -81,11 +85,13 @@ public class StartActivity extends AppCompatActivity
                         Search search = response.body();
                         courses = search.getCourseList();
 
+                        // if courses not found
                         if (courses.size() == 0) {
                             findViewById(R.id.error_layout).setVisibility(View.VISIBLE);
                             fragment.getView().setVisibility(View.GONE);
                         }
                         else {
+                            // show fragment with list of courses
                             fragment = ItemFragment.newInstance(1, courses);
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("list", (Serializable) courses);
@@ -139,6 +145,9 @@ public class StartActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Initialize activity with variables
+     */
     private void init() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -150,7 +159,11 @@ public class StartActivity extends AppCompatActivity
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         searchView = findViewById(R.id.search_view);
+
+        // appdelegate for api request
         appDelegate = AppDelegate.from(getApplicationContext());
+
+        // progress bar
         progressBar = findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.GONE);
     }

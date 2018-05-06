@@ -29,6 +29,9 @@ import company.com.stepikapi.model.Entity.Course;
 import company.com.stepikapi.R;
 import company.com.stepikapi.view.Utils.BitmapTranslator;
 
+/**
+ * Adapter class for recyclerView presenting courses find in search
+ */
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder> {
 
         private List<Course> items = new ArrayList<>();
@@ -94,6 +97,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                 favourite = itemView.findViewById(R.id.button_favourite);
             }
 
+            /**
+             * Save favourite courses to database
+             */
             void setFave(boolean isFavourite) {
                 if (isFavourite)
                     favourite.setBackground(ContextCompat.getDrawable(context, R.drawable.star_on));
@@ -134,13 +140,14 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                         .error(R.mipmap.ic_launcher_round);
 
                 byte[] image = appDatabase.getCourseDao().getCover(courseInfo.getId());
+                // if image is in database then load from it
                 if (image != null) {
                     courseLogo.setImageDrawable(BitmapTranslator.bitmapToDrawable(BitmapTranslator.getImage(image), context));
                     Log.v("bind", "load from db");
                 } else {
-                    if (courseInfo.getCover() != null)
+                    if (courseInfo.getCover() != null) // else if it's already loaded from NET
                         courseLogo.setImageDrawable(BitmapTranslator.bitmapToDrawable(BitmapTranslator.getImage(courseInfo.getCover()), context));
-                    else
+                    else // load from net with glide
                         Glide.with(itemView)
                             .load(courseInfo.getUrlCover())
                             .apply(options)
@@ -162,7 +169,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                 }
             }
 
-
+            /**
+             * Click listener for each item in interface
+             */
             public interface OnItemClickListener {
                 void onClick(Course currency);
             }

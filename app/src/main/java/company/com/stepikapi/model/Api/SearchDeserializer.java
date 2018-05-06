@@ -11,6 +11,9 @@ import java.lang.reflect.Type;
 import company.com.stepikapi.model.Entity.Course;
 import company.com.stepikapi.model.Entity.Search;
 
+/**
+ * Deserializer for search = for api response
+ */
 public class SearchDeserializer implements JsonDeserializer<Search> {
 
     @Override

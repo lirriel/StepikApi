@@ -36,6 +36,7 @@ public class AppDelegate extends Application {
 
     private void initRetrofit() {
         GsonBuilder gsonBuilder = new GsonBuilder();
+        // set gson deserializer
         gsonBuilder.registerTypeAdapter(Search.class, new SearchDeserializer());
         Gson gson = gsonBuilder.create();
 

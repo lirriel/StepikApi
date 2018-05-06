@@ -45,6 +45,9 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * initialize view
+     */
     private void init() {
         author = findViewById(R.id.course_author);
         type = findViewById(R.id.course_type);
@@ -52,6 +55,9 @@ public class DetailsActivity extends AppCompatActivity {
         imageView = findViewById(R.id.course_logo);
     }
 
+    /**
+     * Set info about course on activity
+     */
     private void setCourse(Course course) {
         type.setText(course.getTargetType());
         title.setText(course.getCourseTitle());
