@@ -3,34 +3,25 @@ package company.com.stepikapi;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DetailsFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DetailsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class DetailsFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
+    private TextView title;
+    private TextView author;
+    private TextView type;
+    private ImageView imageView;
+    private Course course;
 
     public DetailsFragment() {}
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DetailsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static DetailsFragment newInstance(String param1, String param2) {
         DetailsFragment fragment = new DetailsFragment();
         Bundle args = new Bundle();
@@ -42,13 +33,35 @@ public class DetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            course = (Course) getArguments().getSerializable("course");
         }
+    }
+
+    private void init() {
+        author = getView().findViewById(R.id.course_author);
+        type = getView().findViewById(R.id.course_type);
+        title = getView().findViewById(R.id.title);
+        imageView = getView().findViewById(R.id.course_logo);
+    }
+
+    private void setCourse(Course course) {
+        type.setText(course.getTargetType());
+        title.setText(course.getCourseTitle());
+        author.setText(course.getCourseOwner()+"");
+        imageView.setImageDrawable(BitmapTranslator.bitmapToDrawable(BitmapTranslator.getImage(course.getCover()), getContext()));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_details, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init();
+        setCourse(course);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

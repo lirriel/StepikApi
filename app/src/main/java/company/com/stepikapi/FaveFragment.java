@@ -61,7 +61,7 @@ public class FaveFragment extends Fragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
-            courseAdapter = new CourseAdapter(null, AppDatabase.getAppDatabase(getContext().getApplicationContext()));
+            courseAdapter = new CourseAdapter(course -> DetailsActivity.start(getActivity(), course), AppDatabase.getAppDatabase(getContext().getApplicationContext()));
 
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;

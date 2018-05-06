@@ -1,6 +1,7 @@
 package company.com.stepikapi;
 
 import android.annotation.SuppressLint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -29,7 +30,8 @@ import retrofit2.Response;
 public class StartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ItemFragment.OnListFragmentInteractionListener,
-        FaveFragment.OnListFragmentInteractionListener {
+        FaveFragment.OnListFragmentInteractionListener,
+        DetailsFragment.OnFragmentInteractionListener {
     private MaterialSearchView searchView;
     private AppDelegate appDelegate;
     private List<Course> courses;
@@ -178,5 +180,10 @@ public class StartActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(int item) {
         Log.v("item", "click");
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

@@ -2,8 +2,10 @@ package company.com.stepikapi;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -65,7 +67,7 @@ public class ItemFragment extends Fragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
-            courseAdapter = new CourseAdapter(null, AppDatabase.getAppDatabase(getContext().getApplicationContext()));
+            courseAdapter = new CourseAdapter(course -> DetailsActivity.start(getActivity(), course), AppDatabase.getAppDatabase(getContext().getApplicationContext()));
 
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;

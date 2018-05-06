@@ -104,8 +104,10 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
             void bind(Course courseInfo) {
                 Log.v("bind", "started");
-                if (appDatabase.getCourseDao().isCurrencyFave(courseInfo.getId()) != null)
+                if (appDatabase.getCourseDao().isIn(courseInfo.getCourseTitle()) != null) {
                     courseInfo.setFave(true);
+                    favourite.setBackground(ContextCompat.getDrawable(context, R.drawable.star_on));
+                }
 
                 if (listener != null)
                     itemView.setOnClickListener(view -> listener.onClick(courseInfo));

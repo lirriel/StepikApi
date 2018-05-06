@@ -7,8 +7,6 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-import company.com.stepikapi.Course;
-
 @Dao
 public interface CourseDao {
     @Insert
@@ -35,8 +33,8 @@ public interface CourseDao {
     @Query("SELECT cover FROM course WHERE id=:id")
     byte[] getCover(long id);
 
-    @Query("select * FROM course WHERE id=:id")
-    Course isCurrencyFave(long id);
+    @Query("select * FROM course WHERE courseTitle=:title")
+    Course isIn(String title);
 
     @Query("UPDATE course SET cover=:image  WHERE id=:id")
     int updateCurrencyImage(long id, byte[] image);
