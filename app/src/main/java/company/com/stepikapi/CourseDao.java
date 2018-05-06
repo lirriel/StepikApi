@@ -35,8 +35,8 @@ public interface CourseDao {
     @Query("SELECT cover FROM course WHERE id=:id")
     byte[] getCover(long id);
 
-   // @Query("UPDATE course SET isFave=:fave  WHERE id=:id")
-    //int updateCurrencyFave(long id, boolean fave);
+    @Query("select * FROM course WHERE id=:id")
+    Course isCurrencyFave(long id);
 
     @Query("UPDATE course SET cover=:image  WHERE id=:id")
     int updateCurrencyImage(long id, byte[] image);

@@ -2,7 +2,6 @@ package company.com.stepikapi;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,6 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.io.Serializable;
@@ -32,6 +34,7 @@ public class StartActivity extends AppCompatActivity
     private AppDelegate appDelegate;
     private List<Course> courses;
     private Fragment fragment = null;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +46,10 @@ public class StartActivity extends AppCompatActivity
 
     private void displaySelectedScreen(int itemId) {
         switch (itemId) {
-            case R.id.nav_gallery:
+            case R.id.nav_search:
                 fragment = new ItemFragment();
                 break;
-            case R.id.nav_slideshow:
+            case R.id.nav_fave:
                 fragment = new FaveFragment();
                 break;
         }
@@ -70,6 +73,7 @@ public class StartActivity extends AppCompatActivity
                 .enqueue(new Callback<Search>() {
                     @Override
                     public void onResponse(@NonNull Call<Search> call, @NonNull Response<Search> response) {
+                        progressBar.setVisibility(View.GONE);
                         Search search = response.body();
                         courses = search.getCourseList();
 
@@ -86,7 +90,8 @@ public class StartActivity extends AppCompatActivity
 
                     @Override
                     public void onFailure(Call<Search> call, Throwable t) {
-                        int t1;
+                        Log.v("search", "failed to load");
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }
@@ -95,12 +100,14 @@ public class StartActivity extends AppCompatActivity
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                progressBar.setVisibility(View.VISIBLE);
                 loadSearch(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                progressBar.setVisibility(View.VISIBLE);
                 return false;
             }
         });
@@ -128,6 +135,8 @@ public class StartActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         searchView = findViewById(R.id.search_view);
         appDelegate = AppDelegate.from(getApplicationContext());
+        progressBar = findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.GONE);
     }
 
     @Override

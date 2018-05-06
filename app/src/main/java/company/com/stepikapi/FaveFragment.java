@@ -71,7 +71,8 @@ public class FaveFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
             recyclerView.setAdapter(courseAdapter);
-            courseAdapter.setData(courses);
+            if (courses != null && courses.size() > 0)
+                courseAdapter.setData(courses);
         }
         return view;
     }

@@ -97,13 +97,16 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
             void setFave(boolean isFavourite) {
                 if (isFavourite)
-                    favourite.setBackground(ContextCompat.getDrawable(context, android.R.drawable.star_big_on));
+                    favourite.setBackground(ContextCompat.getDrawable(context, R.drawable.star_on));
                 else
-                    favourite.setBackground(ContextCompat.getDrawable(context, android.R.drawable.star_big_off));
+                    favourite.setBackground(ContextCompat.getDrawable(context, R.drawable.star_off));
             }
 
             void bind(Course courseInfo) {
                 Log.v("bind", "started");
+                if (appDatabase.getCourseDao().isCurrencyFave(courseInfo.getId()) != null)
+                    courseInfo.setFave(true);
+
                 if (listener != null)
                     itemView.setOnClickListener(view -> listener.onClick(courseInfo));
                 courseName.setText(courseInfo.getCourseTitle());
