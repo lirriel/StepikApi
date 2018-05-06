@@ -1,8 +1,10 @@
-package company.com.stepikapi;
+package company.com.stepikapi.model.Entity;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -10,7 +12,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 @Entity
-public class Course implements Serializable{
+public class Course implements Serializable, Parcelable{
     @PrimaryKey(autoGenerate = true)
     private long _id;
     @SerializedName("id")
@@ -52,6 +54,31 @@ public class Course implements Serializable{
 
     public Course() {
     }
+
+    protected Course(Parcel in) {
+        _id = in.readLong();
+        id = in.readLong();
+        score = in.readDouble();
+        targetType = in.readString();
+        course = in.readInt();
+        courseOwner = in.readLong();
+        courseTitle = in.readString();
+        cover = in.createByteArray();
+        urlCover = in.readString();
+        isFave = in.readByte() != 0;
+    }
+
+    public static final Creator<Course> CREATOR = new Creator<Course>() {
+        @Override
+        public Course createFromParcel(Parcel in) {
+            return new Course(in);
+        }
+
+        @Override
+        public Course[] newArray(int size) {
+            return new Course[size];
+        }
+    };
 
     public long getId() {
         return id;
@@ -123,5 +150,24 @@ public class Course implements Serializable{
 
     public boolean isFave() {
         return isFave;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(_id);
+        dest.writeLong(id);
+        dest.writeDouble(score);
+        dest.writeString(targetType);
+        dest.writeInt(course);
+        dest.writeLong(courseOwner);
+        dest.writeString(courseTitle);
+        dest.writeByteArray(cover);
+        dest.writeString(urlCover);
+        dest.writeByte((byte) (isFave ? 1 : 0));
     }
 }

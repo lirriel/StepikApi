@@ -1,17 +1,19 @@
-package company.com.stepikapi;
+package company.com.stepikapi.view.UI;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import static android.provider.DocumentsContract.EXTRA_INFO;
+import company.com.stepikapi.model.Entity.Course;
+import company.com.stepikapi.R;
+import company.com.stepikapi.view.Utils.BitmapTranslator;
 
 public class DetailsActivity extends AppCompatActivity {
-    private DetailsFragment.OnFragmentInteractionListener mListener;
     private TextView title;
     private TextView author;
     private TextView type;
@@ -21,7 +23,7 @@ public class DetailsActivity extends AppCompatActivity {
 
     public static void start(Activity activity, Course course) {
         Intent intent = new Intent(activity, DetailsActivity.class);
-        intent.putExtra(COURSE_TAG, course);
+        intent.putExtra(COURSE_TAG, (Parcelable) course);
         activity.startActivity(intent);
     }
 
@@ -34,10 +36,13 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (course != null)
-            course = (Course) getIntent().getSerializableExtra(COURSE_TAG);
-        init();
-        setCourse(course);
+        if (course == null && getIntent() != null)
+            course = getIntent().getParcelableExtra(COURSE_TAG);
+
+        if (course != null) {
+            init();
+            setCourse(course);
+        }
     }
 
     private void init() {
@@ -57,14 +62,14 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(COURSE_TAG, course);
+        outState.putParcelable(COURSE_TAG, course);
         Log.d(COURSE_TAG, "onSaveInstanceState");
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        course = (Course) savedInstanceState.getSerializable(COURSE_TAG);
+        course = savedInstanceState.getParcelable(COURSE_TAG);
         Log.d(COURSE_TAG, "onRestoreInstanceState");
     }
 

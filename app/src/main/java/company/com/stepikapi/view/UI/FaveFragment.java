@@ -1,8 +1,7 @@
-package company.com.stepikapi;
+package company.com.stepikapi.view.UI;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,16 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
+import company.com.stepikapi.model.Database.AppDatabase;
+import company.com.stepikapi.model.Api.AppDelegate;
+import company.com.stepikapi.viewmodel.adapter.CourseAdapter;
+import company.com.stepikapi.model.Entity.Course;
+import company.com.stepikapi.R;
+
 public class FaveFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "1";
@@ -30,12 +27,9 @@ public class FaveFragment extends Fragment {
     private CourseAdapter courseAdapter;
     private AppDelegate appDelegate;
     private List<Course> courses;
-    private static final String COURSES_TAG = "courses";
 
-    public FaveFragment() {
-    }
+    public FaveFragment() {}
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static ItemFragment newInstance(int columnCount) {
         ItemFragment fragment = new ItemFragment();
@@ -49,14 +43,11 @@ public class FaveFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         appDelegate = AppDelegate.from(getContext());
+        setRetainInstance(true);
 
         Log.v("item", "started");
-        if (savedInstanceState != null) {
-            courses = (ArrayList<Course>) savedInstanceState.getSerializable(COURSES_TAG);
-        }
-        else  {
+        if (courses == null)
             courses = AppDatabase.getAppDatabase(getContext().getApplicationContext()).getCourseDao().getAllCourse();
-        }
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
@@ -68,10 +59,6 @@ public class FaveFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
 
         // Set the adapter
-
-        if (savedInstanceState != null) {
-            courses = (ArrayList<Course>) savedInstanceState.getSerializable(COURSES_TAG);
-        }
         if (view instanceof RecyclerView) {
             courseAdapter = new CourseAdapter(course -> DetailsActivity.start(getActivity(), course), AppDatabase.getAppDatabase(getContext().getApplicationContext()));
 
@@ -109,12 +96,5 @@ public class FaveFragment extends Fragment {
 
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(int item);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(COURSES_TAG, (Serializable) courses);
-        Log.d(COURSES_TAG, "onSaveInstanceState");
     }
 }

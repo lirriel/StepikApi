@@ -1,9 +1,7 @@
-package company.com.stepikapi;
+package company.com.stepikapi.view.UI;
 
 import android.annotation.SuppressLint;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -21,9 +19,12 @@ import android.widget.ProgressBar;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
+import company.com.stepikapi.model.Api.AppDelegate;
+import company.com.stepikapi.model.Entity.Course;
+import company.com.stepikapi.model.Entity.Search;
+import company.com.stepikapi.R;
 import io.reactivex.annotations.NonNull;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,14 +33,12 @@ import retrofit2.Response;
 public class StartActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ItemFragment.OnListFragmentInteractionListener,
-        FaveFragment.OnListFragmentInteractionListener,
-        DetailsFragment.OnFragmentInteractionListener {
+        FaveFragment.OnListFragmentInteractionListener {
     private MaterialSearchView searchView;
     private AppDelegate appDelegate;
     private List<Course> courses;
     private Fragment fragment = null;
     private ProgressBar progressBar;
-    private static final String COURSES_TAG = "courses";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +58,6 @@ public class StartActivity extends AppCompatActivity
                 break;
         }
 
-        //replacing the fragment
         if (fragment != null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.content_frame, fragment);
@@ -78,25 +76,36 @@ public class StartActivity extends AppCompatActivity
                 .enqueue(new Callback<Search>() {
                     @Override
                     public void onResponse(@NonNull Call<Search> call, @NonNull Response<Search> response) {
+                        findViewById(R.id.error_layout).setVisibility(View.GONE);
                         progressBar.setVisibility(View.GONE);
                         Search search = response.body();
                         courses = search.getCourseList();
 
-                        fragment = ItemFragment.newInstance(1);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("list", (Serializable) courses);
-                        fragment.setArguments(bundle);
+                        if (courses.size() == 0) {
+                            findViewById(R.id.error_layout).setVisibility(View.VISIBLE);
+                            fragment.getView().setVisibility(View.GONE);
+                        }
+                        else {
+                            fragment = ItemFragment.newInstance(1, courses);
+                            Bundle bundle = new Bundle();
+                            bundle.putSerializable("list", (Serializable) courses);
+                            fragment.setArguments(bundle);
 
-                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                        ft.replace(R.id.content_frame, fragment);
-                        ft.commit();
-                        Log.v("transaction", "commit");
+                            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.content_frame, fragment);
+                            ft.commit();
+                            Log.v("transaction", "commit");
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<Search> call, Throwable t) {
                         Log.v("search", "failed to load");
                         progressBar.setVisibility(View.GONE);
+                        findViewById(R.id.error_layout).setVisibility(View.VISIBLE);
+
+                        if (fragment != null)
+                            fragment.getView().setVisibility(View.GONE);
                     }
                 });
     }
@@ -120,10 +129,12 @@ public class StartActivity extends AppCompatActivity
         searchView.setOnSearchViewListener(new MaterialSearchView.SearchViewListener() {
             @Override
             public void onSearchViewShown() {
+                searchView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onSearchViewClosed() {
+                searchView.setVisibility(View.GONE);
             }
         });
     }
@@ -183,22 +194,5 @@ public class StartActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(int item) {
         Log.v("item", "click");
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) { }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(COURSES_TAG, (Serializable) courses);
-        Log.d(COURSES_TAG, "onSaveInstanceState");
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        courses = (List<Course>) savedInstanceState.getSerializable(COURSES_TAG);
-        Log.d(COURSES_TAG, "onRestoreInstanceState");
     }
 }

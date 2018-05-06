@@ -1,4 +1,4 @@
-package company.com.stepikapi;
+package company.com.stepikapi.model.Api;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
@@ -7,6 +7,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
+
+import company.com.stepikapi.model.Entity.Course;
+import company.com.stepikapi.model.Entity.Search;
 
 public class SearchDeserializer implements JsonDeserializer<Search> {
 

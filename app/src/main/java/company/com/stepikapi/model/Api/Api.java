@@ -1,5 +1,6 @@
-package company.com.stepikapi;
+package company.com.stepikapi.model.Api;
 
+import company.com.stepikapi.model.Entity.Search;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

@@ -1,12 +1,9 @@
-package company.com.stepikapi;
+package company.com.stepikapi.view.UI;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,33 +13,29 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
- * interface.
- */
+import company.com.stepikapi.model.Database.AppDatabase;
+import company.com.stepikapi.viewmodel.adapter.CourseAdapter;
+import company.com.stepikapi.model.Entity.Course;
+import company.com.stepikapi.R;
+
 public class ItemFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "1";
-    private static final String COURSES_TAG = "courses";
-    private int mColumnCount = 1;
+    private static final String LIST = "list";
     private OnListFragmentInteractionListener mListener;
+    private int mColumnCount = 1;
     private CourseAdapter courseAdapter;
-    private AppDelegate appDelegate;
     private List<Course> courses;
 
-    public ItemFragment() {
-    }
+    public ItemFragment() {}
 
-    // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ItemFragment newInstance(int columnCount) {
+    public static ItemFragment newInstance(int columnCount, List<Course> courses) {
         ItemFragment fragment = new ItemFragment();
         Bundle args = new Bundle();
+        args.putSerializable(LIST, (Serializable) courses);
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
@@ -52,27 +45,22 @@ public class ItemFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setRetainInstance(true);
         Log.v("item", "started");
-        if (savedInstanceState != null) {
-            courses = (ArrayList<Course>) savedInstanceState.getSerializable(COURSES_TAG);
-        }
-        else if (getArguments() != null) {
+
+        if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
             Bundle bundle = getArguments();
             if (bundle != null) {
-                courses = (ArrayList<Course>) bundle.getSerializable("list");
+                courses = bundle.getParcelableArrayList(LIST);
             }
         }
-        appDelegate = AppDelegate.from(getContext().getApplicationContext());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_item_list, container, false);
-
-        if (savedInstanceState != null)
-            courses = (ArrayList<Course>) savedInstanceState.getSerializable(COURSES_TAG);
 
         if (view instanceof RecyclerView) {
             courseAdapter = new CourseAdapter(course -> DetailsActivity.start(getActivity(), course), AppDatabase.getAppDatabase(getContext().getApplicationContext()));
@@ -84,6 +72,9 @@ public class ItemFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                    DividerItemDecoration.VERTICAL);
+            recyclerView.addItemDecoration(dividerItemDecoration);
             recyclerView.setAdapter(courseAdapter);
             if (courses != null && courses.size() > 0)
                 courseAdapter.setData(courses);
@@ -91,7 +82,6 @@ public class ItemFragment extends Fragment {
         }
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -110,24 +100,8 @@ public class ItemFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href="http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onListFragmentInteraction(int item);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(COURSES_TAG, (Serializable) courses);
-        Log.d(COURSES_TAG, "onSaveInstanceState");
-    }
 }

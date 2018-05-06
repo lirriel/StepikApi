@@ -1,4 +1,4 @@
-package company.com.stepikapi;
+package company.com.stepikapi.viewmodel.adapter;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -23,6 +23,11 @@ import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import company.com.stepikapi.model.Database.AppDatabase;
+import company.com.stepikapi.model.Entity.Course;
+import company.com.stepikapi.R;
+import company.com.stepikapi.view.Utils.BitmapTranslator;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseViewHolder> {
 
@@ -61,12 +66,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
 
         public List<Course> getData() {
             return items;
-        }
-
-        public void remove(Course item) {
-            int position = items.indexOf(item);
-            items.remove(position);
-            notifyItemRemoved(position);
         }
 
         public void add(Course item) {
@@ -123,7 +122,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CourseView
                         appDatabase.getCourseDao().insert(courseInfo);
                     }
                     setFave(courseInfo.isFave());
-                    //appDatabase.getCourseDao().updateCurrencyFave(courseInfo.getId(), courseInfo.isFave());
                     Log.v("fave", "added");
                 });
 

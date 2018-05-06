@@ -1,4 +1,4 @@
-package company.com.stepikapi;
+package company.com.stepikapi.model.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,4 @@ public class Search {
         return courseList;
     }
 
-    public void setCourseList(List<Course> courseList) {
-        this.courseList = courseList;
-    }
 }

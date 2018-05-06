@@ -1,4 +1,6 @@
-package company.com.stepikapi;
+package company.com.stepikapi.model.Api;
+
+import company.com.stepikapi.model.Entity.Search;
 
 public class ApiResponse {
 

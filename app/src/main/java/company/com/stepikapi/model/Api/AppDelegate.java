@@ -1,12 +1,13 @@
-package company.com.stepikapi;
+package company.com.stepikapi.model.Api;
 
 import android.app.Application;
 import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
+
+import company.com.stepikapi.BuildConfig;
+import company.com.stepikapi.model.Entity.Search;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
